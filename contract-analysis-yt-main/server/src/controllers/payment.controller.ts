@@ -4,7 +4,7 @@ import User, { IUser } from "../models/user.model";
 import { sendPremiumConfirmationEmail } from "../services/email.service";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-09-30.acacia",
+  apiVersion: "2025-02-24.acacia",
 });
 
 export const createCheckoutSession = async (req: Request, res: Response) => {
