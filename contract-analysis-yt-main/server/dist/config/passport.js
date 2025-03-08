@@ -18,7 +18,11 @@ const user_model_1 = __importDefault(require("../models/user.model"));
 passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://localhost:8080/auth/google/callback',
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
+        ? `${process.env.NODE_ENV === 'production'
+            ? process.env.CLIENT_URL
+            : 'http://localhost:8080'}${process.env.GOOGLE_CALLBACK_URL}`
+        : 'http://localhost:8080/auth/google/callback',
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let user = yield user_model_1.default.findOne({ googleId: profile.id });

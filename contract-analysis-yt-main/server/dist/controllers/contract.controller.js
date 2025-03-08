@@ -75,7 +75,7 @@ const analyzeContract = (req, res) => __awaiter(void 0, void 0, void 0, function
         if (!analysis.summary || !analysis.risks || !analysis.opportunities) {
             throw new Error("Failed to analyze contract");
         }
-        const savedAnalysis = yield contract_model_1.default.create(Object.assign(Object.assign({ userId: user._id, contractText: pdfText, contractType }, analysis), { language: "en", aiModel: "gemini-pro" }));
+        const savedAnalysis = yield contract_model_1.default.create(Object.assign(Object.assign({ userId: user._id, contractText: pdfText, contractType }, analysis), { language: "en", aiModel: "gemini-1.5-pro" }));
         res.json(savedAnalysis);
     }
     catch (error) {

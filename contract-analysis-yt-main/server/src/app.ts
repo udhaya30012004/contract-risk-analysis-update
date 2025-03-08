@@ -9,6 +9,10 @@ import passport from "passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import "./config/passport";
+// Add this line to import and configure PDF.js
+
+
+
 
 // routes 
 import authRoute from "./routes/auth";
@@ -37,7 +41,8 @@ app.use(
 console.log("Server environment:", {
   NODE_ENV: process.env.NODE_ENV,
   CLIENT_URL: process.env.CLIENT_URL || "http://localhost:3000",
-  PORT: process.env.PORT || 8080
+  PORT: process.env.PORT || 8080,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || "Using default client ID"
 });
 
 app.use(helmet({
@@ -75,13 +80,24 @@ app.get("/status", (req, res) => {
   res.json({ status: "ok", message: "API server is running" });
 });
 
+// Mount authentication routes first to ensure they are properly registered
 app.use("/auth", authRoute);
 app.use("/contracts", contractsRoute);
 app.use("/payments", paymentsRoute);
+
+// Add a catch-all route handler for debugging purposes
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Not Found",
+    message: `The requested URL ${req.url} was not found on this server`,
+    availableRoutes: ["/auth/*", "/contracts/*", "/payments/*", "/status"]
+  });
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
   console.log(`API accessible at http://localhost:${PORT}`);
+  console.log(`Google Auth URL: http://localhost:${PORT}/auth/google`);
   console.log(`Make sure your frontend is configured to connect to this URL`);
 });

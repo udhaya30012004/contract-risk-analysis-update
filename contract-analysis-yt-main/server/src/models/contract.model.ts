@@ -96,7 +96,7 @@ const ContractAnalysisSchema: Schema = new Schema({
   customFields: { type: Map, of: String },
   expirationDate: { type: Date, required: false },
   language: { type: String, default: "en" },
-  aiModel: { type: String, default: "gemini-pro" },
+  aiModel: { type: String, default: "gemini-1.5-pro" }, // Updated from gemini-2.0-flash
   contractType: { type: String, required: true },
   financialTerms: {
     description: String,

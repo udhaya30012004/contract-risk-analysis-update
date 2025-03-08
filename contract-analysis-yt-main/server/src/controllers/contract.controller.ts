@@ -91,7 +91,7 @@ export const analyzeContract = async (req: Request, res: Response) => {
       contractType,
       ...(analysis as Partial<IContractAnalysis>),
       language: "en",
-      aiModel: "gemini-pro",
+      aiModel: "gemini-1.5-pro", // Update this to match the model you're using
     });
 
     res.json(savedAnalysis);

@@ -14,6 +14,7 @@ const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_mongo_1 = __importDefault(require("connect-mongo"));
 require("./config/passport");
+// Add this line to import and configure PDF.js
 // routes 
 const auth_1 = __importDefault(require("./routes/auth"));
 const contracts_1 = __importDefault(require("./routes/contracts"));
@@ -35,7 +36,8 @@ app.use((0, cors_1.default)({
 console.log("Server environment:", {
     NODE_ENV: process.env.NODE_ENV,
     CLIENT_URL: process.env.CLIENT_URL || "http://localhost:3000",
-    PORT: process.env.PORT || 8080
+    PORT: process.env.PORT || 8080,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || "Using default client ID"
 });
 app.use((0, helmet_1.default)({
     crossOriginResourcePolicy: { policy: "cross-origin" }
@@ -60,12 +62,22 @@ app.use(passport_1.default.session());
 app.get("/status", (req, res) => {
     res.json({ status: "ok", message: "API server is running" });
 });
+// Mount authentication routes first to ensure they are properly registered
 app.use("/auth", auth_1.default);
 app.use("/contracts", contracts_1.default);
 app.use("/payments", payments_1.default);
+// Add a catch-all route handler for debugging purposes
+app.use((req, res) => {
+    res.status(404).json({
+        error: "Not Found",
+        message: `The requested URL ${req.url} was not found on this server`,
+        availableRoutes: ["/auth/*", "/contracts/*", "/payments/*", "/status"]
+    });
+});
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
     console.log(`API accessible at http://localhost:${PORT}`);
+    console.log(`Google Auth URL: http://localhost:${PORT}/auth/google`);
     console.log(`Make sure your frontend is configured to connect to this URL`);
 });
